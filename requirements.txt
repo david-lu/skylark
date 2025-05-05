@@ -29,7 +29,7 @@ ftfy
 opencv-python
 pyarrow
 torchmetrics==0.7.3
-deepspeed
+deepspeed==0.14.5
 pycocoevalcap
 torchscale==0.2.0
 hydra-core
