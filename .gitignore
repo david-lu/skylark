@@ -8,3 +8,4 @@
 /model/segment_anything_2/build
 /evf-sam2
 **/*.pyd
+/data

@@ -8,3 +8,4 @@ pushd model\segment_anything_2
 python setup.py build_ext --inplace
 popd
 
+# python inference.py --version YxZhang/evf-sam2 --precision='fp16' --vis_save_path "vis" --model_type sam2 --image_path "assets/zebra.jpg" --prompt "zebra top left"
