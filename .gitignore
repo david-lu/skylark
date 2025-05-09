@@ -9,3 +9,4 @@
 /evf-sam2
 **/*.pyd
 /data
+.venv/
