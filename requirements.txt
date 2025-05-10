@@ -34,4 +34,4 @@ pycocoevalcap
 torchscale==0.2.0
 hydra-core==1.3.2
 accelerate
-gradio
+scenedetect[opencv]==0.6.6
