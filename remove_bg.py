@@ -13,7 +13,10 @@ from model.segment_anything.utils.transforms import ResizeLongestSide
 from model.evf_sam2_video import EvfSam2Model
 
 
-def beit3_preprocess(x: np.ndarray, img_size=224) -> torch.Tensor:
+def beit3_preprocess(
+    x: np.ndarray,
+    img_size: int = 224,
+) -> torch.Tensor:
     '''
     preprocess for BEIT-3 model.
     input: ndarray
@@ -27,10 +30,14 @@ def beit3_preprocess(x: np.ndarray, img_size=224) -> torch.Tensor:
     return beit_preprocess(x)
 
 
-def init_models(version: str, precision: str = "fp16", load_in_4bit: bool = False, 
-               load_in_8bit: bool = False) -> Tuple[PreTrainedTokenizer, EvfSam2Model]:
+def init_models(
+    pretrained_model_name_or_path: str,
+    precision: str = "fp16",
+    load_in_4bit: bool = False,
+    load_in_8bit: bool = False,
+) -> Tuple[PreTrainedTokenizer, EvfSam2Model]:
     tokenizer = AutoTokenizer.from_pretrained(
-        version,
+        pretrained_model_name_or_path,
         padding_side="right",
         use_fast=False,
     )
@@ -68,7 +75,7 @@ def init_models(version: str, precision: str = "fp16", load_in_4bit: bool = Fals
 
     # Always use sam2 model
     model = EvfSam2Model.from_pretrained(
-        version, low_cpu_mem_usage=True, **kwargs
+        pretrained_model_name_or_path, low_cpu_mem_usage=True, **kwargs
     )
 
     if (not load_in_4bit) and (not load_in_8bit):
@@ -78,17 +85,26 @@ def init_models(version: str, precision: str = "fp16", load_in_4bit: bool = Fals
     return tokenizer, model
 
 
-def process(tokenizer: PreTrainedTokenizer, model: EvfSam2Model, image_path: str, vis_save_path: str, 
-         image_size: int, prompt: str) -> None:
+def process(
+    tokenizer: PreTrainedTokenizer,
+    model: EvfSam2Model,
+    frames_path: str,
+    output_path: str,
+    prompt: str,
+    image_size: int = 224,
+) -> None:
     # clarify IO
-    if not os.path.exists(image_path):
-        print("File not found in {}".format(image_path))
+    if not os.path.exists(frames_path):
+        print("File not found in {}".format(frames_path))
         exit()
 
-    os.makedirs(vis_save_path, exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
+    
+    frame_files = os.listdir(frames_path)
+    frame_files.sort()
 
     # preprocess    
-    image_np = cv2.imread(image_path+"/00000.jpg")
+    image_np = cv2.imread(os.path.join(frames_path, frame_files[0]))
     image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
     # original_size_list = [image_np.shape[:2]]
 
@@ -98,18 +114,16 @@ def process(tokenizer: PreTrainedTokenizer, model: EvfSam2Model, image_path: str
 
     # infer
     output = model.inference(
-        image_path,
+        frames_path,
         image_beit.unsqueeze(0),
         input_ids,
         # original_size_list=original_size_list,
     )
     # save visualization
-    files = os.listdir(image_path)
-    files.sort()
-    for i, file in enumerate(files):
-        img = cv2.imread(os.path.join(image_path, file))
+    for i, file in enumerate(frame_files):
+        img = cv2.imread(os.path.join(frames_path, file))
         out = img + np.array([0,0,128]) * output[i][1].transpose(1,2,0)
-        cv2.imwrite(os.path.join(vis_save_path, file), out)
+        cv2.imwrite(os.path.join(output_path, file), out)
 
 
 def init_config() -> None:
@@ -123,14 +137,21 @@ def init_config() -> None:
         torch.backends.cudnn.allow_tf32 = True
 
 
-def main(version: str, vis_save_path: str = "./infer", precision: str = "fp16", image_size: int = 224, 
-         load_in_8bit: bool = False, load_in_4bit: bool = False, 
-         image_path: str = "assets/zebra.jpg", prompt: str = "zebra top left") -> None:
+def main(
+    pretrained_model_name_or_path: str,
+    vis_save_path: str = "./infer",
+    precision: str = "fp16",
+    image_size: int = 224,
+    load_in_8bit: bool = False,
+    load_in_4bit: bool = False,
+    image_path: str = "assets/zebra.jpg",
+    prompt: str = "zebra top left",
+) -> None:
     # Initialize CUDA configuration
     init_config()
         
     # initialize model and tokenizer
-    tokenizer, model = init_models(version, precision, load_in_4bit, load_in_8bit)
+    tokenizer, model = init_models(pretrained_model_name_or_path, precision, load_in_4bit, load_in_8bit)
     
     # Process the images
     process(tokenizer, model, image_path, vis_save_path, image_size, prompt)
@@ -159,7 +180,7 @@ if __name__ == "__main__":
         args = parser.parse_args(sys.argv[1:])
         
         main(
-            version=args.version,
+            pretrained_model_name_or_path=args.version,
             vis_save_path=args.vis_save_path,
             precision=args.precision,
             image_size=args.image_size,
