@@ -13,6 +13,14 @@ from model.segment_anything.utils.transforms import ResizeLongestSide
 from model.evf_sam2_video import EvfSam2Model
 
 
+# Configuration constants
+PRETRAINED_MODEL_PATH = "evf-sam2"  # Path to the pretrained model
+OUTPUT_PATH = "./infer"  # Path to save output visualizations
+IMAGE_SIZE = 224  # Size to resize images to
+FRAMES_PATH = "assets/zebra.jpg"  # Path to input frames
+PROMPT = "zebra top left"  # Text prompt for segmentation
+
+
 def beit3_preprocess(
     x: np.ndarray,
     img_size: int = 224,
@@ -85,26 +93,26 @@ def init_models(
     return tokenizer, model
 
 
-def process(
+def process_frames(
     tokenizer: PreTrainedTokenizer,
     model: EvfSam2Model,
-    frames_path: str,
-    output_path: str,
+    input_frames_path: str,
+    output_frames_path: str,
     prompt: str,
     image_size: int = 224,
 ) -> None:
     # clarify IO
-    if not os.path.exists(frames_path):
-        print("File not found in {}".format(frames_path))
+    if not os.path.exists(input_frames_path):
+        print("File not found in {}".format(input_frames_path))
         exit()
 
-    os.makedirs(output_path, exist_ok=True)
+    os.makedirs(output_frames_path, exist_ok=True)
     
-    frame_files = os.listdir(frames_path)
+    frame_files = os.listdir(input_frames_path)
     frame_files.sort()
 
     # preprocess    
-    image_np = cv2.imread(os.path.join(frames_path, frame_files[0]))
+    image_np = cv2.imread(os.path.join(input_frames_path, frame_files[0]))
     image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
     # original_size_list = [image_np.shape[:2]]
 
@@ -114,16 +122,16 @@ def process(
 
     # infer
     output = model.inference(
-        frames_path,
+        input_frames_path,
         image_beit.unsqueeze(0),
         input_ids,
         # original_size_list=original_size_list,
     )
     # save visualization
     for i, file in enumerate(frame_files):
-        img = cv2.imread(os.path.join(frames_path, file))
+        img = cv2.imread(os.path.join(input_frames_path, file))
         out = img + np.array([0,0,128]) * output[i][1].transpose(1,2,0)
-        cv2.imwrite(os.path.join(output_path, file), out)
+        cv2.imwrite(os.path.join(output_frames_path, file), out)
 
 
 def init_config() -> None:
@@ -137,59 +145,21 @@ def init_config() -> None:
         torch.backends.cudnn.allow_tf32 = True
 
 
-def main(
-    pretrained_model_name_or_path: str,
-    vis_save_path: str = "./infer",
-    precision: str = "fp16",
-    image_size: int = 224,
-    load_in_8bit: bool = False,
-    load_in_4bit: bool = False,
-    image_path: str = "assets/zebra.jpg",
-    prompt: str = "zebra top left",
-) -> None:
+if __name__ == "__main__":
     # Initialize CUDA configuration
     init_config()
         
     # initialize model and tokenizer
-    tokenizer, model = init_models(pretrained_model_name_or_path, precision, load_in_4bit, load_in_8bit)
+    tokenizer, model = init_models(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_PATH,
+    )
     
     # Process the images
-    process(tokenizer, model, image_path, vis_save_path, image_size, prompt)
-
-
-if __name__ == "__main__":
-    # If command line arguments are provided, use them to override defaults
-    if len(sys.argv) > 1:
-        import argparse
-        parser = argparse.ArgumentParser(description="EVF infer")
-        parser.add_argument("--version", required=True)
-        parser.add_argument("--vis_save_path", default="./infer", type=str)
-        parser.add_argument(
-            "--precision",
-            default="fp16",
-            type=str,
-            choices=["fp32", "bf16", "fp16"],
-            help="precision for inference",
-        )
-        parser.add_argument("--image_size", default=224, type=int, help="image size")
-        parser.add_argument("--load_in_8bit", action="store_true", default=False)
-        parser.add_argument("--load_in_4bit", action="store_true", default=False)
-        parser.add_argument("--image_path", type=str, default="assets/zebra.jpg")
-        parser.add_argument("--prompt", type=str, default="zebra top left")
-        
-        args = parser.parse_args(sys.argv[1:])
-        
-        main(
-            pretrained_model_name_or_path=args.version,
-            vis_save_path=args.vis_save_path,
-            precision=args.precision,
-            image_size=args.image_size,
-            load_in_8bit=args.load_in_8bit,
-            load_in_4bit=args.load_in_4bit,
-            image_path=args.image_path,
-            prompt=args.prompt
-        )
-    else:
-        # Require at least the version parameter
-        print("Error: --version parameter is required")
-        exit(1)
+    process_frames(
+        tokenizer=tokenizer,
+        model=model,
+        input_frames_path=FRAMES_PATH,
+        output_frames_path=OUTPUT_PATH,
+        prompt=PROMPT,
+        image_size=IMAGE_SIZE
+    )

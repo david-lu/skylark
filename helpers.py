@@ -8,6 +8,7 @@
 # OpenCV (cv2) is used for image writing.
 
 import os
+import shutil
 import cv2 # OpenCV for image writing
 from scenedetect import open_video, SceneManager, FrameTimecode
 from scenedetect.detectors import ContentDetector
@@ -41,7 +42,7 @@ def split_video_into_scenes(video_path: str, output_path: str) -> List[str]:
 
         video = open_video(video_path)
         scene_manager: SceneManager = SceneManager()
-        scene_manager.add_detector(ContentDetector()) 
+        scene_manager.add_detector(ContentDetector(threshold=12.0, min_scene_len=12)) 
 
         base_timecode: FrameTimecode = video.frame_rate
         print(f"Detecting scenes in '{os.path.basename(video_path)}' for video splitting...")
@@ -138,3 +139,13 @@ def save_video_to_image_sequence(video_path: str, output_images_path: str, image
         if video and video.is_open():
             video.release()
     return generated_image_files
+
+
+def prepare_temp_dir(path: str):
+    if os.path.exists(path):
+        # Remove only if not empty
+        if os.listdir(path):  # non-empty
+            shutil.rmtree(path)
+            os.makedirs(path)
+    else:
+        os.makedirs(path)
