@@ -128,10 +128,11 @@ def process_frames(
         input_ids,
         # original_size_list=original_size_list,
     )
+
     # save visualization
     for i, file in enumerate(frame_files):
         img = cv2.imread(os.path.join(input_frames_path, file))
-        out = img + np.array([0,0,128]) * output[i][1].transpose(1,2,0)
+        out = img + (np.array([255,255,255]) * np.logical_not(output[i][1].transpose(1,2,0)))
         cv2.imwrite(os.path.join(output_frames_path, file), out)
 
 
