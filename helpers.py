@@ -18,6 +18,8 @@ from scenedetect.video_splitter import split_video_ffmpeg # For splitting video
 from scenedetect.video_manager import VideoManager # For type hinting video object
 from typing import List, Union, Optional, Tuple # For type hinting
 import numpy # For type hinting frame_data
+import cv2
+import numpy as np
 
 # Configure basic logging
 logging.basicConfig(
@@ -25,6 +27,44 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+
+def smooth_animation_cel(
+    img: np.ndarray
+) -> np.ndarray:
+    """
+    Lightly smooth an animation cel image to remove static noise, preserving lines and flat colors.
+    Smoothing strength scales with image resolution.
+
+    Args:
+        img (np.ndarray): Input animation cel (BGR format, uint8).
+
+    Returns:
+        np.ndarray: Smoothed animation cel image (same shape as input).
+    """
+    if img is None or not isinstance(img, np.ndarray):
+        raise ValueError("Input image must be a valid NumPy array.")
+
+    h: int
+    w: int
+    h, w = img.shape[:2]
+    scale: float = ((h * w) / (512 * 512)) ** 0.5  # base = 512x512
+
+    # Light bilateral filter settings (edge-preserving smoothing)
+    d: int = max(3, int(3 * scale) | 1)  # ensure odd, at least 3
+    sigma_color: int = int(20 * scale)
+    sigma_space: int = int(10 * scale)
+
+    smoothed: np.ndarray = cv2.bilateralFilter(img, d=d, sigmaColor=sigma_color, sigmaSpace=sigma_space)
+
+    # Optional: small median blur to clean up specks
+    ksize: int = max(3, int(scale))
+    if ksize % 2 == 0:
+        ksize += 1
+    if ksize <= 3:
+        smoothed = cv2.medianBlur(smoothed, ksize=3)
+
+    return smoothed
 
 def split_video_into_scenes(
     video_path: str,
