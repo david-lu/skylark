@@ -8,7 +8,7 @@ import torch
 import torch.nn.functional as F
 from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode
-from transformers import AutoTokenizer, BitsAndBytesConfig, PreTrainedTokenizer
+from transformers import AutoTokenizer, BitsAndBytesConfig
 from model.segment_anything.utils.transforms import ResizeLongestSide
 from model.evf_sam2_video import EvfSam2Model
 
@@ -37,19 +37,20 @@ def beit3_preprocess(
     ])
     return beit_preprocess(x)
 
-
-def init_models(
-    pretrained_model_name_or_path: str,
-    precision: str = "fp16",
-    load_in_4bit: bool = False,
-    load_in_8bit: bool = False,
-) -> Tuple[PreTrainedTokenizer, EvfSam2Model]:
-    tokenizer = AutoTokenizer.from_pretrained(
+def init_tokenizer(pretrained_model_name_or_path) -> AutoTokenizer:
+    return AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path,
         padding_side="right",
         use_fast=False,
     )
 
+
+def init_model(
+    pretrained_model_name_or_path: str,
+    precision: str = "fp16",
+    load_in_4bit: bool = False,
+    load_in_8bit: bool = False,
+) -> EvfSam2Model:
     torch_dtype = torch.float32
     if precision == "bf16":
         torch_dtype = torch.bfloat16
@@ -82,19 +83,19 @@ def init_models(
         )
 
     # Always use sam2 model
-    model = EvfSam2Model.from_pretrained(
+    sam_model = EvfSam2Model.from_pretrained(
         pretrained_model_name_or_path, low_cpu_mem_usage=True, **kwargs
     )
 
     if (not load_in_4bit) and (not load_in_8bit):
-        model = model.cuda()
-    model.eval()
+        sam_model = sam_model.cuda()
+    sam_model.eval()
 
-    return tokenizer, model
+    return sam_model
 
 
 def process_frames(
-    tokenizer: PreTrainedTokenizer,
+    tokenizer: AutoTokenizer,
     model: EvfSam2Model,
     input_frames_path: str,
     output_frames_path: str,
@@ -150,7 +151,8 @@ if __name__ == "__main__":
     init_config()
         
     # initialize model and tokenizer
-    tokenizer, model = init_models(
+    tokenizer = init_tokenizer(pretrained_model_name_or_path=PRETRAINED_MODEL_PATH)
+    model = init_model(
         pretrained_model_name_or_path=PRETRAINED_MODEL_PATH,
     )
     

@@ -102,7 +102,7 @@ def save_video_to_image_sequence(
         ret, frame = cap.read()
         if not ret:
             break
-        fname = os.path.join(output_dir, f"{prefix}{idx:04d}.jpg")
+        fname = os.path.join(output_dir, f"{prefix}{idx:05d}.jpg")
         if cv2.imwrite(fname, frame):
             saved_files.append(fname)
         else:

@@ -2,14 +2,15 @@ from helpers import (
     prepare_temp_dir, 
     save_video_to_image_sequence,
 )
-from remove_bg import init_config, init_models, process_frames
+from remove_bg import init_config, init_model, process_frames, init_tokenizer
 import os
 
 SAM2_MODEL = "YxZhang/evf-sam2"
 TEMP_DIR = "tmp"
 
 init_config()
-model, tokenizer = init_models(SAM2_MODEL)
+tokenizer = init_tokenizer(SAM2_MODEL)
+model = init_model(SAM2_MODEL)
 
 def process_scene_video(scene_path: str):
     input_dir = os.path.join(TEMP_DIR, 'input')
@@ -27,4 +28,4 @@ def process_scene_video(scene_path: str):
     return frames
 
 if __name__ == '__main__':
-    process_scene_video("data/Basil-Scene-0004.mp4")
+    process_scene_video("data/test.mp4")

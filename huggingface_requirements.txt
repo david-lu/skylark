@@ -109,6 +109,7 @@ rich==13.8.0
 rpds-py==0.20.0
 ruff==0.6.3
 safetensors==0.4.4
+scenedetect[opencv]==0.6.6
 scipy==1.11.2
 semantic-version==2.10.0
 sentencepiece==0.2.0

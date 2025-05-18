@@ -1,6 +1,6 @@
 pyenv global 3.10.13
-python -m venv .venv
-source .venv/bin/activate
+#python -m venv .venv
+#source .venv/bin/activate
 
 sudo apt install -y libffi-dev build-essential zlib1g-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses-dev libncursesw5-dev xz-utils tk-dev
 pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --index-url https://download.pytorch.org/whl/cu121
