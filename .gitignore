@@ -11,3 +11,5 @@
 /data
 /tmp
 .venv/
+/demo_temp/
+/.idea/

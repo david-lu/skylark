@@ -35,3 +35,4 @@ torchscale==0.2.0
 hydra-core==1.3.2
 accelerate
 scenedetect[opencv]==0.6.6
+pydantic==2.10.6

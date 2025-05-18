@@ -1,0 +1,109 @@
+'2.4.0+cu121'
+
+Python 3.10.13
+
+>> uname -r
+6.11.0-25-generic
+
+
+
+[
+    {
+        "Id": "sha256:d86d14c10fa891332284e8db0a93e815830a45dd6e7f236fd9c636c760ae21e8",
+        "RepoTags": [
+            "registry.hf.space/wondervictor-evf-sam2:zero-ced1641"
+        ],
+        "RepoDigests": [
+            "registry.hf.space/wondervictor-evf-sam2@sha256:72188c80c22d6173bafb497ea2be7d0349a059403da7a1809d730cbf05db9df2"
+        ],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2024-12-09T17:39:34.015113849Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "user",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/home/user/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "HOME=/home/user",
+                "DEBIAN_FRONTEND=noninteractive",
+                "TZ=Europe/Paris",
+                "PYTHONPATH=/home/user/app",
+                "PYTHONUNBUFFERED=1",
+                "HF_HUB_ENABLE_HF_TRANSFER=1",
+                "GRADIO_ALLOW_FLAGGING=never",
+                "GRADIO_FLAGGING_MODE=never",
+                "GRADIO_CACHE_EXAMPLES=lazy",
+                "GRADIO_NUM_PORTS=1",
+                "GRADIO_SERVER_NAME=0.0.0.0",
+                "GRADIO_SSR_MODE=True",
+                "GRADIO_THEME=huggingface",
+                "TQDM_POSITION=-1",
+                "TQDM_MININTERVAL=1",
+                "SYSTEM=spaces",
+                "PYTORCH_NVML_BASED_CUDA_CHECK=1",
+                "GRADIO_CACHE_MODE=lazy",
+                "GRADIO_DEFAULT_CONCURRENCY_LIMIT=None"
+            ],
+            "Cmd": null,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/home/user/app",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 8530832225,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/fa21742eadfa7602532bb168353e873daf3cc65a883f7d390186728b5101aaef/diff:/var/lib/docker/overlay2/1cc5d7bc3d34c047ba225bd5e6c4c03c315060c69192ca447dbfc444f971ea02/diff:/var/lib/docker/overlay2/57124dc8012973ee81a00d7964286e587ad5f83ea98e3d69e746b565f7bc767f/diff:/var/lib/docker/overlay2/797b0e0460903735fee68e597704d032a91b00fdbe9558aabbaeb9fcb385171c/diff:/var/lib/docker/overlay2/c3dfd2d337bde545fc49884e4b563a244660a7536ba87643fb764a4cf435d062/diff:/var/lib/docker/overlay2/d018652384feee785ee3b784aab7482868e5972ae2382501afcfa05af5a6db41/diff:/var/lib/docker/overlay2/cfac70ae1affce268ea63d201e48adf823fd776ad81006f2f6f940997492cde1/diff",
+                "MergedDir": "/var/lib/docker/overlay2/33cba080ff6c0be9fe54d6cd47e46bbadce620513bd72457b0739996a55b51b0/merged",
+                "UpperDir": "/var/lib/docker/overlay2/33cba080ff6c0be9fe54d6cd47e46bbadce620513bd72457b0739996a55b51b0/diff",
+                "WorkDir": "/var/lib/docker/overlay2/33cba080ff6c0be9fe54d6cd47e46bbadce620513bd72457b0739996a55b51b0/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:9f7390d6b9e05f5c88f22c8f4e026c46f127f39b752a19cf9dcd40f02ab83761",
+                "sha256:5290adfb6e4bed6409c88e7d5c10d62dcdac787e35fed46e0b84c7ffc9aa88c0",
+                "sha256:4654a07dae13b11e542b4352f582ecc92fd64b1878f387598a7a387a9c0187e5",
+                "sha256:43e851e7f1ef0ffeba350409fc67c2b5954d60f2decbff43e1eb032e7fcaf89d",
+                "sha256:2cca83d2a57d25a7347cb74a280fce3daccbc83928671c8a94950aabeba3147a",
+                "sha256:fa8fae1a016337b45684713f1e1e73647b143c2245c81a6fab184fd86a7cafe9",
+                "sha256:aabde2a84a4d6e43f9aa2ffb641ba4abada61e658756883e01353ae01548f8d3",
+                "sha256:05e4b1b4ee8b28f362ba83267b1da85a1b3a946cbdafe704ea3a65ec3a9fdcfc"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "0001-01-01T00:00:00Z"
+        }
+    }
+]
+
+
+IMAGE                                                                     CREATED        CREATED BY                                                                                                                                                                                                                                                                                                                                                                                                                             SIZE      COMMENT
+sha256:d86d14c10fa891332284e8db0a93e815830a45dd6e7f236fd9c636c760ae21e8   5 months ago   ENV PYTHONPATH=/home/user/app PYTHONUNBUFFERED=1 HF_HUB_ENABLE_HF_TRANSFER=1 GRADIO_ALLOW_FLAGGING=never GRADIO_FLAGGING_MODE=never GRADIO_CACHE_EXAMPLES=true GRADIO_NUM_PORTS=1 GRADIO_SERVER_NAME=0.0.0.0 GRADIO_SSR_MODE=True GRADIO_THEME=huggingface TQDM_POSITION=-1 TQDM_MININTERVAL=1 SYSTEM=spaces PYTORCH_NVML_BASED_CUDA_CHECK=1 GRADIO_CACHE_EXAMPLES=lazy GRADIO_CACHE_MODE=lazy GRADIO_DEFAULT_CONCURRENCY_LIMIT=None   0B        buildkit.dockerfile.v0
+<missing>                                                                 5 months ago   COPY --chown=1000 /tmp/freeze.txt /tmp/freeze.txt # buildkit                                                                                                                                                                                                                                                                                                                                                                           2.61kB    buildkit.dockerfile.v0
+<missing>                                                                 5 months ago   COPY --chown=1000 ./ /home/user/app # buildkit                                                                                                                                                                                                                                                                                                                                                                                         70.4MB    buildkit.dockerfile.v0
+<missing>                                                                 5 months ago   RUN /bin/sh -c pip install --no-cache-dir  gradio[oauth]==4.37.2  "uvicorn>=0.14.0"  spaces==0.30.4 "fastapi<0.113.0" # buildkit                                                                                                                                                                                                                                                                                                       78.8MB    buildkit.dockerfile.v0
+<missing>                                                                 8 months ago   RUN /bin/sh -c pip install --no-cache-dir -r /tmp/requirements.txt # buildkit                                                                                                                                                                                                                                                                                                                                                          1.44GB    buildkit.dockerfile.v0
+<missing>                                                                 8 months ago   RUN /bin/sh -c pip install --no-cache-dir pip==22.3.1 &&  pip install --no-cache-dir  datasets  "huggingface-hub>=0.19" "hf-transfer>=0.1.4" "protobuf<4" "click<8.1" "pydantic~=1.0" torch==2.4.0 # buildkit                                                                                                                                                                                                                          5.42GB    buildkit.dockerfile.v0
+<missing>                                                                 9 months ago   RUN /bin/sh -c apt-get update && apt-get install -y  git  git-lfs  ffmpeg  libsm6  libxext6  cmake  rsync  libgl1-mesa-glx  && rm -rf /var/lib/apt/lists/*  && git lfs install # buildkit                                                                                                                                                                                                                                              531MB     buildkit.dockerfile.v0
+<missing>                                                                 9 months ago   WORKDIR /home/user/app                                                                                                                                                                                                                                                                                                                                                                                                                 0B        buildkit.dockerfile.v0
+<missing>                                                                 9 months ago   ENV HOME=/home/user PATH=/home/user/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin DEBIAN_FRONTEND=noninteractive TZ=Europe/Paris                                                                                                                                                                                                                                                                             0B        buildkit.dockerfile.v0
+<missing>                                                                 9 months ago   USER user                                                                                                                                                                                                                                                                                                                                                                                                                              0B        buildkit.dockerfile.v0
+<missing>                                                                 9 months ago   COPY --chown=1000:1000 / / # buildkit                                                                                                                                                                                                                                                                                                                                                                                                  994MB     buildkit.dockerfile.v0
+
+
