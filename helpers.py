@@ -75,7 +75,7 @@ def split_video_into_scenes(
     Splits `video_path` into scene clips under `output_dir`.
     Returns list of generated clip filenames (not full paths).
     """
-    detectors = detectors or [ContentDetector(threshold=12.0, min_scene_len=12)]
+    detectors = detectors or [ContentDetector(threshold=12.0, min_scene_len=15)]
     if not os.path.isfile(video_path):
         logger.error(f"Video not found: {video_path}")
         return []
