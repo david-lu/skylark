@@ -101,6 +101,7 @@ def process_frames(
     output_frames_path: str,
     prompt: str,
     image_size: int = 224,
+    semantic_type: bool = False
 ) -> None:
     # clarify IO
     if not os.path.exists(input_frames_path):
@@ -119,6 +120,8 @@ def process_frames(
 
     image_beit = beit3_preprocess(image_np, image_size).to(dtype=model.dtype, device=model.device)
 
+    if semantic_type:
+        prompt = "[semantic] " + prompt
     input_ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device=model.device)
 
     # infer

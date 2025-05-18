@@ -1,4 +1,4 @@
-from constants import SAM2_MODEL, TMP_INPUT_FRAME_DIR, TMP_OUTPUT_FRAME_DIR
+from constants import SAM2_MODEL, TMP_INPUT_FRAME_DIR, TMP_OUTPUT_FRAME_DIR, SAM2_MODEL_MULTITASK
 import shutil
 import os
 from helpers import (
@@ -8,8 +8,8 @@ from helpers import (
 from remove_bg import init_config, init_model, process_frames, init_tokenizer
 
 init_config()
-tokenizer = init_tokenizer(SAM2_MODEL)
-model = init_model(SAM2_MODEL)
+tokenizer = init_tokenizer(SAM2_MODEL_MULTITASK)
+model = init_model(SAM2_MODEL_MULTITASK)
 
 def process_scene(scene_path: str):
     # Setup temp environment
@@ -24,8 +24,9 @@ def process_scene(scene_path: str):
         model=model,
         input_frames_path=TMP_INPUT_FRAME_DIR,
         output_frames_path=TMP_OUTPUT_FRAME_DIR,
-        prompt="animated cartoon characters",
+        prompt="animated cartoon characters in the style of animation cel",
         image_size=224,
+        semantic_type=True # semantic_type
     )
     return frames
 
@@ -41,4 +42,4 @@ def process_scenes(scene_folder_path: str):
                 shutil.move(frame_path, os.path.join(scene_output_dir, frame_file))
 
 if __name__ == '__main__':
-    process_scene("data/test.mp4")
+    process_scenes("data/test/")
