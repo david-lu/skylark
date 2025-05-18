@@ -1,4 +1,4 @@
->> torch.__version__
+python -c  "import torch ; print(torch.__version__)"
 '2.4.0+cu121'
 
 >> python --version
